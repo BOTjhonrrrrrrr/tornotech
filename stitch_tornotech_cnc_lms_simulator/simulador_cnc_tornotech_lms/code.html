@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>TornoTech LMS - CNC Editor</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600;700;900&amp;family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .icon-fill {
+            font-variation-settings: 'FILL' 1;
+        }
+    </style>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration (Provided) -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-primary": "#00344b",
+                    "outline": "#87929b",
+                    "primary-fixed": "#c6e7ff",
+                    "secondary-container": "#ed9000",
+                    "on-surface": "#d6e4f9",
+                    "primary-container": "#00a8e8",
+                    "inverse-surface": "#d6e4f9",
+                    "surface-dim": "#061423",
+                    "error": "#ffb4ab",
+                    "surface-bright": "#2d3a4a",
+                    "on-secondary-container": "#583300",
+                    "on-error": "#690005",
+                    "primary": "#83cfff",
+                    "on-tertiary": "#2f312e",
+                    "inverse-primary": "#00658d",
+                    "on-tertiary-fixed-variant": "#454745",
+                    "surface-tint": "#83cfff",
+                    "secondary-fixed": "#ffdcbc",
+                    "on-primary-container": "#003952",
+                    "secondary-fixed-dim": "#ffb86b",
+                    "on-tertiary-fixed": "#1a1c1a",
+                    "inverse-on-surface": "#243141",
+                    "on-error-container": "#ffdad6",
+                    "tertiary-fixed": "#e2e3df",
+                    "outline-variant": "#3e4850",
+                    "on-surface-variant": "#bdc8d1",
+                    "background": "#061423",
+                    "surface": "#061423",
+                    "on-secondary": "#492900",
+                    "tertiary-fixed-dim": "#c6c7c3",
+                    "surface-variant": "#283646",
+                    "on-primary-fixed-variant": "#004c6b",
+                    "tertiary-container": "#9c9e9a",
+                    "on-secondary-fixed-variant": "#683d00",
+                    "primary-fixed-dim": "#83cfff",
+                    "error-container": "#93000a",
+                    "on-primary-fixed": "#001e2d",
+                    "surface-container-lowest": "#020f1e",
+                    "surface-container-highest": "#283646",
+                    "secondary": "#ffb86b",
+                    "surface-container-high": "#1e2b3b",
+                    "surface-container-low": "#0f1c2c",
+                    "on-tertiary-container": "#333533",
+                    "tertiary": "#c6c7c3",
+                    "on-secondary-fixed": "#2c1700",
+                    "surface-container": "#132030",
+                    "on-background": "#d6e4f9"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "gutter": "16px",
+                    "margin": "24px",
+                    "unit": "4px",
+                    "container-max": "1440px"
+            },
+            "fontFamily": {
+                    "headline-md": ["Hanken Grotesk"],
+                    "display-lg": ["Hanken Grotesk"],
+                    "label-sm": ["JetBrains Mono"],
+                    "headline-lg": ["Hanken Grotesk"],
+                    "code-md": ["JetBrains Mono"],
+                    "body-lg": ["Inter"],
+                    "body-md": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "600"}],
+                    "code-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+            }
+          }
+        },
+      }
+    </script>
+<style>
+        /* Custom scrollbar for an industrial look */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: theme('colors.surface-container-lowest');
+        }
+        ::-webkit-scrollbar-thumb {
+            background: theme('colors.outline-variant');
+            border-radius: theme('borderRadius.full');
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: theme('colors.outline');
+        }
+        
+        .simulation-grid {
+            background-size: 20px 20px;
+            background-image: 
+                linear-gradient(to right, theme('colors.outline-variant') 1px, transparent 1px), 
+                linear-gradient(to bottom, theme('colors.outline-variant') 1px, transparent 1px);
+            opacity: 0.15;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md text-body-md flex h-screen overflow-hidden selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopNavBar (Shared Component JSON Blueprint) -->
+<header class="fixed top-0 flex justify-between items-center w-full px-margin h-16 z-50 bg-surface-container border-b border-outline-variant">
+<!-- Left: Branding & Search -->
+<div class="flex items-center gap-margin">
+<!-- Mobile Menu Toggle -->
+<button class="md:hidden text-on-surface-variant hover:text-on-surface transition-colors flex items-center justify-center">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<div class="text-headline-md font-headline-md font-bold text-primary flex items-center gap-2">
+<span class="material-symbols-outlined icon-fill">precision_manufacturing</span>
+                TornoTech LMS
+            </div>
+<!-- Search Bar (on_left configuration) -->
+<div class="hidden md:flex items-center bg-surface-container-highest border border-outline-variant rounded-DEFAULT px-3 py-1.5 focus-within:border-primary focus-within:ring-1 focus-within:ring-primary transition-all">
+<span class="material-symbols-outlined text-on-surface-variant text-[18px]">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-body-md font-body-md text-on-surface placeholder:text-on-surface-variant py-0 px-2 w-48 outline-none" placeholder="Search resources..." type="text"/>
+</div>
+</div>
+<!-- Right: Actions & Profile -->
+<div class="flex items-center gap-4">
+<button class="text-on-surface-variant hover:bg-surface-bright transition-colors p-2 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="text-on-surface-variant hover:bg-surface-bright transition-colors p-2 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined">help_outline</span>
+</button>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-outline-variant ml-2 cursor-pointer">
+<img alt="User profile avatar" class="w-full h-full object-cover" data-alt="A close-up profile portrait of a confident industrial engineer wearing safety glasses and a crisp dark navy collared shirt. The lighting is dramatic and studio-quality, emphasizing technical professionalism. The background is a slightly blurred, high-tech dark mode laboratory environment with subtle blue and orange glowing accents." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDoPU1t4flGYs8zowxlZTt-PPEFpRquERpLSGVl4f_3qfvIO8iISxbZbVhK69LzEVEDfSlp_IObLaeOrQGj-M77Og1KFHdfLrWI-Cv_x_XnWAfIuGbWKMQgn0QeRcPZhPkDEKxpUv4WjOSoGUkgm4vS3hlJOrg5pVO7u9vR4MVFK6LcWnvvXl5gAmsrDIwstk9A8zrRxRqyuYPTJKY46Pp82uD-kNl6bsxmPkVlzQYpL7ZPGqpsL4I"/>
+</div>
+</div>
+</header>
+<!-- SideNavBar (Shared Component JSON Blueprint) -->
+<nav class="fixed left-0 top-0 h-full flex flex-col pt-16 z-40 bg-surface-dim border-r border-outline-variant w-64 hidden md:flex">
+<!-- Header area inside nav as per JSON -->
+<div class="px-margin py-6 border-b border-outline-variant flex flex-col gap-1">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-primary-container flex items-center justify-center text-on-primary-container">
+<span class="material-symbols-outlined">api</span>
+</div>
+<div class="text-headline-sm font-headline-md font-bold text-on-surface tracking-tight">TornoTech</div>
+</div>
+<div class="text-label-sm font-label-sm text-on-surface-variant tracking-widest uppercase">Precision LMS</div>
+</div>
+<!-- Primary Navigation -->
+<div class="flex-1 py-4 flex flex-col gap-1">
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-on-surface px-4 py-3 hover:bg-surface-container-high transition-colors text-label-sm font-label-sm" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+                Dashboard
+            </a>
+<!-- ACTIVE TAB: CNC Editor -->
+<a class="flex items-center gap-3 bg-primary-container text-on-primary-container border-r-4 border-primary rounded-none px-4 py-3 scale-[0.99] transition-transform duration-100 text-label-sm font-label-sm font-bold opacity-80 cursor-default" href="#">
+<span class="material-symbols-outlined icon-fill">code_blocks</span>
+                CNC Editor
+            </a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-on-surface px-4 py-3 hover:bg-surface-container-high transition-colors text-label-sm font-label-sm" href="#">
+<span class="material-symbols-outlined">settings_input_component</span>
+                Instructor
+            </a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-on-surface px-4 py-3 hover:bg-surface-container-high transition-colors text-label-sm font-label-sm" href="#">
+<span class="material-symbols-outlined">analytics</span>
+                Analytics
+            </a>
+</div>
+<!-- Footer Navigation -->
+<div class="mt-auto border-t border-outline-variant py-4 flex flex-col gap-1">
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-on-surface px-4 py-3 hover:bg-surface-container-high transition-colors text-label-sm font-label-sm" href="#">
+<span class="material-symbols-outlined">settings</span>
+                Settings
+            </a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-on-surface px-4 py-3 hover:bg-surface-container-high transition-colors text-label-sm font-label-sm" href="#">
+<span class="material-symbols-outlined">support_agent</span>
+                Support
+            </a>
+</div>
+</nav>
+<!-- Main Application Canvas -->
+<main class="pt-16 md:pl-64 flex flex-col w-full h-full">
+<!-- Context Header / Breadcrumb -->
+<div class="px-margin py-3 border-b border-outline-variant bg-surface flex items-center justify-between shrink-0">
+<div class="flex items-center gap-2 text-label-sm font-label-sm text-on-surface-variant">
+<span class="hover:text-primary cursor-pointer transition-colors">Exercises</span>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span class="hover:text-primary cursor-pointer transition-colors">Lathe</span>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span class="text-on-surface font-semibold">Intermediate Exercise 3</span>
+</div>
+<div class="flex items-center gap-3">
+<div class="flex items-center gap-1.5 px-2.5 py-1 bg-surface-container rounded-full border border-outline-variant text-label-sm font-label-sm text-primary">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+                    Simulation Ready
+                </div>
+</div>
+</div>
+<!-- Dual Pane Workspace -->
+<div class="flex-1 flex flex-col lg:flex-row overflow-hidden relative">
+<!-- LEFT PANE: ISO Code Editor -->
+<section class="w-full lg:w-[45%] flex flex-col bg-surface-container-lowest border-r border-outline-variant z-10 shrink-0 shadow-[4px_0_12px_rgba(0,0,0,0.2)]">
+<!-- Editor Header -->
+<div class="px-4 py-3 border-b border-outline-variant flex justify-between items-center bg-surface-container shrink-0">
+<h2 class="text-body-md font-body-md font-semibold text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-outline">integration_instructions</span>
+                        ISO Code Editor
+                    </h2>
+<button class="bg-primary hover:bg-primary-fixed-dim text-on-primary text-label-sm font-label-sm px-4 py-1.5 rounded flex items-center gap-2 transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1 focus:ring-offset-surface">
+<span class="material-symbols-outlined text-[16px]">rule</span>
+                        Validate Code
+                    </button>
+</div>
+<!-- Editor Body -->
+<div class="flex-1 overflow-y-auto flex font-code-md text-code-md p-2">
+<!-- Line Numbers -->
+<div class="w-10 flex flex-col items-end pr-3 text-outline-variant select-none border-r border-surface-container-high py-2 space-y-1">
+<div>1</div><div>2</div><div>3</div><div>4</div><div>5</div><div>6</div><div>7</div><div>8</div><div>9</div><div>10</div><div>11</div><div>12</div><div>13</div><div>14</div><div class="text-primary font-bold bg-surface-container w-full text-right px-3 -mr-3 relative before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-0.5 before:bg-primary">15</div><div>16</div><div>17</div><div>18</div>
+</div>
+<!-- Code Canvas -->
+<div class="flex-1 pl-4 py-2 space-y-1 whitespace-pre outline-none" contenteditable="true" spellcheck="false">
+<div class="text-on-surface-variant"><span class="text-secondary-container">O1000</span> (PROFILE ROUGHING)</div>
+<div><span class="text-primary">G21</span> <span class="text-primary">G40</span> <span class="text-primary">G99</span></div>
+<div><span class="text-primary">G50</span> S2000</div>
+<div>T0101 (ROUGHING TOOL)</div>
+<div><span class="text-primary">G96</span> S180 <span class="text-secondary-container">M03</span></div>
+<div class="hover:bg-surface-container px-1 -mx-1 rounded cursor-text"><span class="text-error">G00</span> X52.0 Z2.0 <span class="text-secondary-container">M08</span></div>
+<div><span class="text-primary">G71</span> U2.0 R1.0</div>
+<div><span class="text-primary">G71</span> P10 Q20 U0.5 W0.1 F0.25</div>
+<div>N10 <span class="text-error">G00</span> X20.0</div>
+<div><span class="text-primary">G01</span> Z0.0 F0.15</div>
+<div>X25.0 Z-2.5</div>
+<div>Z-15.0</div>
+<div>X35.0 Z-25.0</div>
+<div>Z-40.0</div>
+<div class="bg-surface-container-high border border-primary px-1 -mx-1 rounded shadow-[inset_0_0_8px_rgba(131,207,255,0.2)]">X50.0</div>
+<div>N20 X52.0</div>
+<div><span class="text-error">G00</span> X150.0 Z150.0 <span class="text-secondary-container">M09</span></div>
+<div><span class="text-secondary-container">M30</span></div>
+</div>
+</div>
+</section>
+<!-- RIGHT PANE: 2D Simulation Canvas -->
+<section class="flex-1 flex flex-col bg-surface-container-low relative">
+<!-- Simulator Header -->
+<div class="px-4 py-3 border-b border-outline-variant flex justify-between items-center bg-surface-container shrink-0 z-10">
+<h2 class="text-body-md font-body-md font-semibold text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-outline">view_in_ar</span>
+                        2D Simulation Canvas
+                    </h2>
+<!-- View Controls -->
+<div class="flex bg-surface-container-lowest border border-outline-variant rounded p-0.5">
+<button class="p-1 text-primary bg-surface-container rounded hover:bg-surface-bright transition-colors" title="Top View (X-Z)">
+<span class="material-symbols-outlined text-[18px]">crop_din</span>
+</button>
+<button class="p-1 text-on-surface-variant hover:text-on-surface hover:bg-surface-bright transition-colors rounded" title="Isometric View">
+<span class="material-symbols-outlined text-[18px]">deployed_code</span>
+</button>
+<div class="w-px bg-outline-variant mx-1 my-1"></div>
+<button class="p-1 text-on-surface-variant hover:text-on-surface hover:bg-surface-bright transition-colors rounded" title="Zoom In">
+<span class="material-symbols-outlined text-[18px]">zoom_in</span>
+</button>
+<button class="p-1 text-on-surface-variant hover:text-on-surface hover:bg-surface-bright transition-colors rounded" title="Zoom Out">
+<span class="material-symbols-outlined text-[18px]">zoom_out</span>
+</button>
+</div>
+</div>
+<!-- Simulation Viewport -->
+<div class="flex-1 relative overflow-hidden simulation-grid">
+<!-- Floating Error Panel (Validation Warning) -->
+<div class="absolute top-4 right-4 w-80 bg-surface-container border-l-2 border-secondary-container rounded shadow-lg p-3 z-20 flex flex-col gap-2">
+<div class="flex items-start gap-2">
+<span class="material-symbols-outlined text-secondary-container text-[20px]">warning</span>
+<div>
+<h4 class="text-label-sm font-label-sm font-bold text-on-surface">Validation Warning</h4>
+<p class="text-label-sm font-body-md text-on-surface-variant mt-1 leading-tight">
+                                    Line 15: Rapid approach (G00) ends closer than 2.0mm safe clearance to workpiece boundary.
+                                </p>
+</div>
+</div>
+</div>
+<!-- SVG Canvas for 2D Rendering -->
+<svg class="absolute inset-0 w-full h-full" preserveaspectratio="xMidYMid meet" viewbox="0 0 800 600">
+<!-- Origin/Datum marker -->
+<g transform="translate(600, 300)">
+<!-- Axes -->
+<line stroke="var(--tw-colors-outline-variant)" stroke-dasharray="10 5" stroke-width="1" x1="-500" x2="100" y1="0" y2="0"></line>
+<line stroke="var(--tw-colors-outline-variant)" stroke-dasharray="10 5" stroke-width="1" x1="0" x2="0" y1="-250" y2="250"></line>
+<!-- Axis Labels -->
+<text class="font-code-md text-[12px]" fill="var(--tw-colors-outline)" x="-480" y="-10">Z-Axis</text>
+<text class="font-code-md text-[12px]" fill="var(--tw-colors-outline)" x="10" y="-230">X-Axis</text>
+<!-- Spindle/Chuck representation -->
+<rect fill="var(--tw-colors-surface-container-highest)" height="160" stroke="var(--tw-colors-outline)" stroke-width="2" width="40" x="-480" y="-80"></rect>
+<!-- Workpiece Base Material (Ghosted) -->
+<rect fill="var(--tw-colors-surface-variant)" height="100" opacity="0.3" width="440" x="-440" y="-50"></rect>
+<!-- Workpiece Final Profile (Machined) -->
+<polygon fill="var(--tw-colors-outline-variant)" points="-440,-50 -250,-50 -150,-35 -50,-35 -25,-25 0,-20 0,20 -25,25 -50,35 -150,35 -250,50 -440,50" stroke="var(--tw-colors-on-surface-variant)" stroke-width="1"></polygon>
+<!-- Toolpaths -->
+<!-- G00 Rapid approach (Red dashed) -->
+<path d="M50,-100 L20,-52" fill="none" stroke="var(--tw-colors-error)" stroke-dasharray="6,4" stroke-width="2"></path>
+<!-- Active G01 Cutting path (Cyan solid) - Current Line 15 context -->
+<path d="M20,-52 L2,-52 L2,-20 L-25,-25 L-50,-35" fill="none" stroke="var(--tw-colors-primary)" stroke-width="2"></path>
+<circle class="animate-pulse" cx="-50" cy="-35" fill="var(--tw-colors-primary)" r="4"></circle>
+<!-- Tool Insert Graphic -->
+<g transform="translate(-50, -35) rotate(-30) scale(0.8)">
+<polygon fill="var(--tw-colors-secondary-container)" points="-5,-25 5,-25 0,0"></polygon>
+<rect fill="var(--tw-colors-surface-container-highest)" height="35" stroke="var(--tw-colors-outline)" width="20" x="-10" y="-60"></rect>
+</g>
+</g>
+</svg>
+</div>
+</section>
+</div>
+<!-- BOTTOM STATUS BAR -->
+<footer class="h-14 bg-surface-container border-t border-outline-variant flex items-center px-4 justify-between shrink-0 z-20 shadow-[0_-4px_12px_rgba(0,0,0,0.1)]">
+<!-- Coordinates Display -->
+<div class="flex items-center gap-6 font-code-md text-code-md text-on-surface bg-surface-container-lowest px-4 py-1.5 border border-outline-variant rounded">
+<div class="flex items-center gap-2">
+<span class="text-outline">X:</span>
+<span class="font-bold tracking-wider"> 50.000</span>
+</div>
+<div class="w-px h-4 bg-outline-variant"></div>
+<div class="flex items-center gap-2">
+<span class="text-outline">Z:</span>
+<span class="font-bold tracking-wider">-15.000</span>
+</div>
+</div>
+<!-- Telemetry & Tool Data -->
+<div class="hidden md:flex items-center gap-6 font-code-md text-[13px] text-on-surface-variant">
+<div class="flex items-center gap-1.5" title="Feed Rate">
+<span class="material-symbols-outlined text-[16px] text-outline">speed</span>
+                    F: 0.25 mm/rev
+                </div>
+<div class="flex items-center gap-1.5" title="Spindle Speed">
+<span class="material-symbols-outlined text-[16px] text-outline">rotate_right</span>
+                    S: 180 m/min
+                </div>
+<div class="flex items-center gap-1.5 text-primary border-l border-outline-variant pl-6" title="Active Tool">
+<span class="material-symbols-outlined text-[16px]">hardware</span>
+                    T0101 (Roughing)
+                </div>
+</div>
+<!-- Execution Controls -->
+<div class="flex items-center gap-2">
+<button class="bg-surface hover:bg-surface-bright border border-outline-variant text-on-surface p-2 rounded transition-colors" title="Stop (Reset)">
+<span class="material-symbols-outlined text-[20px] text-error">stop</span>
+</button>
+<button class="bg-surface hover:bg-surface-bright border border-outline-variant text-on-surface p-2 rounded transition-colors" title="Pause">
+<span class="material-symbols-outlined text-[20px] text-secondary-container">pause</span>
+</button>
+<button class="bg-primary hover:bg-primary-fixed-dim text-on-primary px-4 py-2 rounded flex items-center gap-2 transition-colors font-label-sm shadow-[0_0_10px_rgba(131,207,255,0.3)]">
+<span class="material-symbols-outlined icon-fill text-[20px]">play_arrow</span>
+                    Execute Simulation
+                </button>
+</div>
+</footer>
+</main>
+</body></html>

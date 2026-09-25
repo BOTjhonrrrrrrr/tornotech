@@ -1,0 +1,34 @@
+# --- Backend (Java / Maven) ---
+tornotech-lms-backend/target/
+*.class
+*.jar
+!.mvn/wrapper/maven-wrapper.jar
+
+# --- Frontend (Node / Vite) ---
+tornotech-lms-frontend/node_modules/
+tornotech-lms-frontend/dist/
+tornotech-lms-frontend/.vite/
+npm-debug.log*
+
+# --- Entornos y secretos ---
+.env
+.env.local
+*.env
+tornotech-lms-backend/src/main/resources/application-local.properties
+
+# --- Archivos grandes / respaldos que no deben ir al repo ---
+*.zip
+PROYECTO FINAL TORNOTECH.zip
+
+# --- Material de referencia de otros proyectos (no es código propio) ---
+referencias/
+
+# --- Editor / SO ---
+.vscode/
+.idea/
+*.iml
+.DS_Store
+Thumbs.db
+
+# --- Logs ---
+*.log

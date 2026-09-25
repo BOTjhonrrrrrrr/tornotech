@@ -1,0 +1,36 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* La app no tiene ningun flujo que necesite scroll horizontal a nivel de pagina (las tablas y el
+   editor de codigo ya manejan su propio overflow-x internamente). overflow-x-hidden en PageLayout
+   no bastaba porque el navegador puede seguir mostrando la barra a nivel de documento por otras
+   causas; esto la bloquea de raiz sin afectar el scroll vertical normal. */
+html, body {
+  overflow-x: hidden;
+}
+
+/* Scrollbar industrial (ver DESIGN.md del mockup Stitch) */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #020f1e; /* surface-container-lowest */
+}
+::-webkit-scrollbar-thumb {
+  background: #3e4850; /* outline-variant */
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #83cfff; /* primary */
+}
+
+/* Grid de fondo para el canvas de simulación (ver simulador_cnc_tornotech_lms/code.html) */
+.simulation-grid {
+  background-size: 20px 20px;
+  background-image:
+    linear-gradient(to right, #3e4850 1px, transparent 1px),
+    linear-gradient(to bottom, #3e4850 1px, transparent 1px);
+  opacity: 0.15;
+}
